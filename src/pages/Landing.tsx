@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 
 export default function Landing() {
   return (
@@ -20,7 +21,37 @@ export default function Landing() {
             <div className='absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-cyan-300/10 rounded-full blur-[100px]'/>
         </div>
        {/*Navigation */}
-           <nav className='relative z-10 max-w-7x1 mx-auto px-6 py-6'></nav>
+           <nav className='relative z-10 max-w-7x1 mx-auto px-6 py-6 flex items-center justify-between'>
+            <div className='flex items-center gap-12'>
+                {/* Logo */}
+                 <div className='flex items-center gap-2 cursor-pointer' onClick={() => navigate('/')}>
+                     <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-700 to-yellow-600 flex items-center justify-center shadow-md">
+              <span className="text-white font-bold text-lg leading-none">G</span>
+               </div>
+              <span className="text-xl font-bold text-slate-900 tracking-tight">GuideWire</span>
+          </div>
+
+          {/* Desktop links */}
+          <div className='hidden md:flex items-center gap-8 text-sm font-medium text-blue-500'>
+            <button className='flex items-center gap-1 hover:text-slate-900 transition-colors'>
+                Solutions <ChevronDown className='w-4 h-4 opacity-50'/>
+            </button>
+            <button className="flex items-center gap-1 hover:text-slate-900 transition-colors">
+              Platform <ChevronDown className="w-4 h-4 opacity-50" />
+            </button>
+            <button className="hover:text-slate-900 transition-colors">Mentors</button>
+            <button className="flex items-center gap-1 hover:text-slate-900 transition-colors">
+              Company <ChevronDown className="w-4 h-4 opacity-50" />
+            </button>
+            <button className="flex items-center gap-1 hover:text-slate-900 transition-colors">
+              Resources <ChevronDown className="w-4 h-4 opacity-50" />
+            </button>
+            
+          </div>
+
+
+            </div>
+           </nav>
        < div>Landing</div>
     </motion.div>
     
