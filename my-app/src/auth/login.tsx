@@ -17,6 +17,9 @@ export default function Login() {
             }
         };
   return (
+    
+    <div>
+      <div>
     <div className='mt-10 justify-self-center mx-auto' >
       <h1 className='justify-self-center justify-center font-bold text-2-3x1'>Login to Guidewire</h1>
       <form className='max-w-md mx-auto mt-10 p-8 bg-white rounded-x1 shadow-1g ' onSubmit={submit}> 
@@ -44,10 +47,13 @@ export default function Login() {
            <div className='flex shadow-amber-300'>
             <button type='submit' 
             className=' flex w-full items-center justify-center gap-2 rounded-x1 bg=slate-900 py-3 text-sm font-semibold transition-colors hover:bg-slate-800 ' >
-                  Login
+                  Sign in
             </button>
            </div>
+      
       </form>
+    </div>
+    </div>
     </div>
   )
 }
