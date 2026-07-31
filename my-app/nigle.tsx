@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -268,12 +268,26 @@ export default function Landing() {
 
 
 
+
+
 //LOGIN 
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Check } from 'lucide-react';
 
 export default function Login() {
+  const [ email, setEmail ] = useState<string>("");
+  const [password, setPassword ] = useState<string>(""
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      console.log(email);
+      console.log(password);
+
+    } catch (error) {
+        setError("Invalid email or password.please try again")
+    }
+  }
   return (
     <div className="flex min-h-screen font-sans bg-white">
       {/* LEFT COLUMN: Form Area */}
@@ -295,7 +309,7 @@ export default function Login() {
           <p className="mt-2 text-sm text-slate-500">Sign in to continue your growth roadmap.</p>
 
           {/* User's Original Form (Restyled) */}
-          <form className="mt-8">
+          <form className="mt-8" onSubmit={submit}>
             
             {/* Email Input Group */}
             <div className="mb-5">
@@ -304,7 +318,7 @@ export default function Login() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-                <input 
+                <input  value={email} onChange={(e) => setEmail(e.target.value)}
                   type="email" 
                   id="email"
                   placeholder="you@example.com" 
@@ -322,15 +336,15 @@ export default function Login() {
                   Password
                 </label>
                 <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-                  Forgot?
+                  Forgot password
                 </a>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-                <input 
+                <input value={password} onChange={(e) => setPassword(e.target.value)}
                   type="password" 
                   id="password"
-                  placeholder="••••••••" 
+                  placeholder="password" 
                   required 
                   className="w-full rounded-xl border border-slate-200 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
                 />

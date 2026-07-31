@@ -1,59 +1,137 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+
+//LOGIN 
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, Lock, ArrowRight, Check } from 'lucide-react';
+import {useState } from 'react';
 
 export default function Login() {
-        const [ email, setEmail ] = useState<string>("");
-        const [ password, setPassword ] = useState<string>("")
-        const [error, setError ] = useState("")
-        const submit  = async (e:React.FormEvent<HTMLFormElement>) => {
-           e.preventDefault()
-           setError("");
+  const [ email, setEmail ] = useState<string>("");
+  const [password, setPassword ] = useState<string>("");
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      console.log(email);
+      console.log(password);
 
-          try { 
-           console.log(email);
-           console.log(password);
-          } catch(error){
-             setError("Invalid email or password. please try again")
-            }
-        };
+    } catch (error) {
+        setError("Invalid email or password.please try again")
+    }
+  }
   return (
-    
-    <div>
-      <div>
-    <div className='mt-10 justify-self-center mx-auto' >
-      <h1 className='justify-self-center justify-center font-bold text-2-3x1'>Login to Guidewire</h1>
-      <form className='max-w-md mx-auto mt-10 p-8 bg-white rounded-x1 shadow-1g ' onSubmit={submit}> 
-        <h1 className='text-3xl font-bold text-center mb-4'> Login</h1>
-           <div className='mb-4'>
-            <label htmlFor='email' className='black text-black-600 mb-78'>
-              Email 
-            </label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type='email'
-             id='email'
-              placeholder='type in valid email addess'
-               required
-                className='w-full rounded-x1 px-4 py-2 pl=11 pr-4 text-sm text0slate-900 placeholder:text-slate-400 focus:border-blue-600   border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'>
-            </input>
-           </div>
-           <div className='mb-4'>
+    <div className="flex min-h-screen font-sans bg-white">
+      {/* LEFT COLUMN: Form Area */}
+      {}
+      <div className="flex w-full flex-col justify-center px-8 sm:px-16 lg:w-[45%] xl:px-24">
+        <div className="mx-auto w-full max-w-[380px]">
+          
+          {/* Logo */}
+          <div className="mb-12 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600 shadow-sm">
+              <span className="text-lg font-bold leading-none text-white">G</span>
+            </div>
+            <span className="text-xl font-bold tracking-tight text-slate-900">GuideWire</span>
+          </div>
 
-            <label htmlFor='password' className='block text-black-600 mb-2'>
-              Password
-            </label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type='password' placeholder='password' required className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'>
-            </input>
+          {/* Headings */}
+          {}
+          <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
+          <p className="mt-2 text-sm text-slate-500">Sign in to continue your growth roadmap.</p>
+
+          {/* User's Original Form (Restyled) */}
+          <form className="mt-8" onSubmit={submit}>
             
-           </div>
-           <div className='flex shadow-amber-300'>
-            <button type='submit' 
-            className=' flex w-full items-center justify-center gap-2 rounded-x1 bg=slate-900 py-3 text-sm font-semibold transition-colors hover:bg-slate-800 ' >
-                  Sign in
+            {/* Email Input Group */}
+            <div className="mb-5">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                <input  value={email} onChange={(e) => setEmail(e.target.value)}
+                  type="email" 
+                  id="email"
+                  placeholder="you@example.com" 
+                  required 
+                  className="w-full rounded-xl border border-slate-200 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                />
+              </div>
+            </div>
+
+            {/* Password Input Group */}
+            {}
+            <div className="mb-6">
+              <div className="mb-2 flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                  Password
+                </label>
+                <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                  Forgot password
+                </a>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                <input value={password} onChange={(e) => setPassword(e.target.value)}
+                  type="password" 
+                  id="password"
+                  placeholder="password" 
+                  required 
+                  className="w-full rounded-xl border border-slate-200 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+            >
+              Sign in
+              <ArrowRight className="h-4 w-4" />
             </button>
-           </div>
-      
-      </form>
+          </form>
+
+          {/* Footer Link */}
+          <p className="mt-8 text-center text-sm text-slate-600">
+            Don't have an account?{' '}
+            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700">
+              Create one
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* RIGHT COLUMN: Hero/Promo Area (Hidden on mobile, visible on large screens) */}
+      {}
+      <div className="hidden w-full flex-col justify-center bg-gradient-to-br from-blue-600 to-blue-900 p-12 lg:flex lg:w-[55%] xl:p-24 relative overflow-hidden">
+        {/* Optional subtle glow effect to match the deep gradient vibe */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
+        
+        <div className="mx-auto max-w-lg relative z-10">
+          <h2 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
+            Your next promotion shouldn't be a guessing game.
+          </h2>
+          <p className="mt-6 text-lg text-blue-100">
+            AI guidance, human mentors, and a clear roadmap — all in one place.
+          </p>
+
+          {/* Feature List */}
+          <div className="mt-12 space-y-5">
+            {[
+              'AI mentor available 24/7',
+              'Book verified human mentors in minutes',
+              'Track growth milestones with real data',
+            ].map((feature, idx) => (
+              <div key={idx} className="flex items-center gap-4">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20">
+                  <Check className="h-4 w-4 text-white" strokeWidth={3} />
+                </div>
+                <span className="text-blue-50 font-medium">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    </div>
-  )
+  );
 }
