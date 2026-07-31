@@ -23,7 +23,15 @@ export default function Register() {
           {/*form */}
           <form className='space-y-6'>
              {/* Role selection */}
-             <div className='grid grid-cols-2 gap-3'></div>
+             <div className='grid grid-cols-2 gap-3'>
+               <button className='flex items-center gap-2 rounded-x1 border p-2.5 text-sm font-medium transition-all border-blue-600 bg-blue-50 text-blue-700 shadow-sm 
+               broder-slate-200'>
+                Individual
+               </button>
+               <button className='flex items-center gap-2rounde-x1 border  p-2.5 text-sm font-medium transition-all'>
+                Company/HR
+               </button>
+             </div>
 
           </form>
 
