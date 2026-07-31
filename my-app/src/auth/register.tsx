@@ -17,13 +17,17 @@ export default function Register() {
 
           {/* headings*/}
           <h1 className='text-2x1 font-bold text-slate-900' > Create your account </h1>
-          <p  className='mt-2 text-sm text-slate-500 mb-80'> Start growing in under 2 minutes</p>
+          <p  className='mt-2 text-sm text-slate-500 mb-8'> Start growing in under 2 minutes</p>
           {/* error  */}
 
           {/*form */}
           <form className='space-y-6'>
              {/* Role selection */}
-             <div className='grid grid-cols-2 gap-3'>
+             <div >
+               <label className='mb-2 block text-sm font-medium text-slate-700'>
+                I'm Joining us
+               </label>
+              <div className='grid grid-cols-2 gap-3'>
                <button className='flex items-center gap-2 rounded-x1 border p-2.5 text-sm font-medium transition-all border-blue-600 bg-blue-50 text-blue-700 shadow-sm 
                broder-slate-200'>
                 Individual
@@ -32,7 +36,18 @@ export default function Register() {
                 Company/HR
                </button>
              </div>
+            </div>
 
+            <div>
+              <label htmlFor='name' className='mb-2 block text-sm font-meduim text-slate-700'>
+                Full Name
+              </label>
+              <div className='relative'>
+                <input type='name'>
+                </input>
+
+              </div>
+            </div>
           </form>
 
         </div>
