@@ -8,6 +8,7 @@ import {useState } from 'react';
 export default function Login() {
   const [ email, setEmail ] = useState<string>("");
   const [password, setPassword ] = useState<string>("");
+  const [, setError] = useState<string>("");
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
@@ -23,7 +24,7 @@ export default function Login() {
       {/* LEFT COLUMN: Form Area */}
       {}
       <div className="flex w-full flex-col justify-center px-8 sm:px-16 lg:w-[45%] xl:px-24">
-        <div className="mx-auto w-full max-w-[380px]">
+        <div className="mx-auto w-full max-w-95">
           
           {/* Logo */}
           <div className="mb-12 flex items-center gap-2">
@@ -88,6 +89,7 @@ export default function Login() {
             >
               Sign in
               <ArrowRight className="h-4 w-4" />
+              <Link to='Dashboard'></Link>
             </button>
           </form>
 
@@ -103,9 +105,9 @@ export default function Login() {
 
       {/* RIGHT COLUMN: Hero/Promo Area (Hidden on mobile, visible on large screens) */}
       {}
-      <div className="hidden w-full flex-col justify-center bg-gradient-to-br from-blue-600 to-blue-900 p-12 lg:flex lg:w-[55%] xl:p-24 relative overflow-hidden">
+      <div className="hidden w-full flex-col justify-center bg-linear-to-br from-blue-600 to-blue-900 p-12 lg:flex lg:w-[55%] xl:p-24 relative overflow-hidden">
         {/* Optional subtle glow effect to match the deep gradient vibe */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-125 h-125 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
         
         <div className="mx-auto max-w-lg relative z-10">
           <h2 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
