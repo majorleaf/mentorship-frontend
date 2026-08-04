@@ -1,6 +1,6 @@
-
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { 
   LayoutDashboard, 
   Brain, 
@@ -19,74 +19,138 @@ import {
 } from 'lucide-react';
 import { ShopContext } from '../context.tsx';
 
-// 1. MENTEE VIEW (Your original beautiful design)
-const MenteeView = ({ firstName }: { firstName: string }) => (
-  <div className="max-w-6xl mx-auto space-y-8">
-    <div>
-      <h1 className="text-2xl font-bold text-slate-900">Welcome back, {firstName}</h1>
-      <p className="mt-1 text-sm text-slate-500">Here's your growth snapshot for today.</p>
+// Simple MentorCard component to prevent crashing when mentors array has data
+const MentorCard = ({ mentor }: { mentor: any }) => (
+  <div className="border border-slate-200 rounded-xl p-3 flex flex-col items-center text-center shadow-sm">
+    <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mb-2">
+      {mentor?.name?.charAt(0) || 'M'}
     </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {[
-        { label: 'AI chats', value: '12', icon: Brain, color: 'text-blue-600', bg: 'bg-blue-100' },
-        { label: 'Sessions booked', value: '0', icon: Calendar, color: 'text-green-600', bg: 'bg-green-100' },
-        { label: 'Milestones', value: '3', icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-100' },
-        { label: 'Mentors', value: '0', icon: Users, color: 'text-slate-700', bg: 'bg-slate-200' },
-      ].map((stat) => (
-        <div key={stat.label} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${stat.bg}`}>
-            <stat.icon className={`h-5 w-5 ${stat.color}`} />
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900">{stat.value}</h3>
-          <p className="text-sm font-medium text-slate-500 mt-1">{stat.label}</p>
-        </div>
-      ))}
-    </div>
-
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 bg-blue-600 rounded-3xl p-8 text-white relative overflow-hidden flex flex-col justify-center">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        <div className="relative z-10">
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md mb-4">
-            <Sparkles className="h-3.5 w-3.5" />
-            AI Mentor
-          </span>
-          <h2 className="text-3xl font-bold mb-2">Need quick career advice?</h2>
-          <p className="text-blue-100 mb-6 max-w-md text-sm">
-            Chat with your AI mentor anytime — no booking required.
-          </p>
-          <Link to="/ai-mentor" className="inline-flex items-center gap-2 bg-white text-slate-900 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-50 transition-colors w-fit">
-            Start chatting
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-        <h3 className="font-bold text-slate-900 mb-6">Your roadmap</h3>
-        <div className="space-y-5">
-          {[
-            { label: 'Core skills', pct: 80, color: 'bg-blue-600' },
-            { label: 'Leadership', pct: 55, color: 'bg-blue-600' },
-            { label: 'System design', pct: 40, color: 'bg-blue-600' },
-            { label: 'Interview prep', pct: 100, color: 'bg-green-500' },
-          ].map((item) => (
-            <div key={item.label}>
-              <div className="flex justify-between text-xs font-semibold mb-2">
-                <span className="text-slate-700">{item.label}</span>
-                <span className="text-slate-900">{item.pct}%</span>
-              </div>
-              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div className={`h-full rounded-full ${item.color} transition-all duration-1000`} style={{ width: `${item.pct}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <h4 className="font-semibold text-slate-900 text-xs truncate w-full">{mentor?.name || 'Mentor'}</h4>
   </div>
 );
+
+// 1. MENTEE VIEW (Now fetching real stats!)
+const MenteeView = ({ firstName, userId, token, backendUrl }: { 
+  firstName: string; 
+  userId: string;
+  token: string;
+  backendUrl: string;
+}) => {
+  const [stats, setStats] = useState({
+    aiChats: 0,
+    sessionsBooked: 0,
+    milestones: 0,
+    mentors: 0,
+  });
+  const [mentors, setMentors] = useState<any[]>([]); // For the recommended mentors
+  
+  useEffect(() => {
+    if (!userId) return;
+    
+    axios.get(`${backendUrl}/api/users/${userId}/stats`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(r => setStats(r.data))
+    .catch(() => {}); // silently fail, keep zeros
+
+  }, [userId, backendUrl, token]);
+
+  const statCards = [
+    { label: 'AI chats', value: stats.aiChats, icon: Brain, color: 'text-blue-600', bg: 'bg-blue-100' },
+    { label: 'Sessions booked', value: stats.sessionsBooked, icon: Calendar, color: 'text-green-600', bg: 'bg-green-100' },
+    { label: 'Milestones', value: stats.milestones, icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-100' },
+    { label: 'Mentors', value: stats.mentors, icon: Users, color: 'text-slate-700', bg: 'bg-slate-200' },
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Welcome back, {firstName}</h1>
+        <p className="mt-1 text-sm text-slate-500">Here's your growth snapshot for today.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {statCards.map((stat) => (
+          <div key={stat.label} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${stat.bg}`}>
+              <stat.icon className={`h-5 w-5 ${stat.color}`} />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900">{stat.value}</h3>
+            <p className="text-sm font-medium text-slate-500 mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Hero AI Chat box */}
+          <div className="bg-blue-600 rounded-3xl p-8 text-white relative overflow-hidden flex flex-col justify-center h-full min-h-[250px]">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md mb-4">
+                <Sparkles className="h-3.5 w-3.5" />
+                AI Mentor
+              </span>
+              <h2 className="text-3xl font-bold mb-2">Need quick career advice?</h2>
+              <p className="text-blue-100 mb-6 max-w-md text-sm">
+                Chat with your AI mentor anytime — no booking required.
+              </p>
+              <Link to="/ai-mentor" className="inline-flex items-center gap-2 bg-white text-slate-900 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-50 transition-colors w-fit">
+                Start chatting
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* RECOMMENDED MENTORS SECTION */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-bold text-slate-900">Recommended mentors</h3>
+              <Link to="/discover" className="text-sm text-blue-600 font-medium hover:underline">
+                See all
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {mentors.length === 0 ? (
+                <div className="col-span-3 text-center py-8 text-slate-400 text-sm">
+                  Complete your profile to get matched with mentors
+                </div>
+              ) : (
+                mentors.map(m => (
+                  <MentorCard key={m._id || m.id} mentor={m} />
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Your Roadmap */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 h-fit">
+          <h3 className="font-bold text-slate-900 mb-6">Your roadmap</h3>
+          <div className="space-y-5">
+            {[
+              { label: 'Core skills', pct: 80, color: 'bg-blue-600' },
+              { label: 'Leadership', pct: 55, color: 'bg-blue-600' },
+              { label: 'System design', pct: 40, color: 'bg-blue-600' },
+              { label: 'Interview prep', pct: 100, color: 'bg-green-500' },
+            ].map((item) => (
+              <div key={item.label}>
+                <div className="flex justify-between text-xs font-semibold mb-2">
+                  <span className="text-slate-700">{item.label}</span>
+                  <span className="text-slate-900">{item.pct}%</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${item.color} transition-all duration-1000`} style={{ width: `${item.pct}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // 2. MENTOR VIEW 
 const MentorView = ({ firstName }: { firstName: string }) => (
@@ -168,7 +232,7 @@ const SuperAdminView = () => (
 export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useContext(ShopContext) || {}; 
+  const { user, logout, backendUrl, token } = useContext(ShopContext) || {}; 
 
   // Safely extract user details
   const role = user?.role || 'mentee';
@@ -219,7 +283,7 @@ export default function Dashboard() {
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       
       {/* LEFT COLUMN: Sidebar (Shared across all roles) */}
-      <aside className="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col">
+      <aside className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-slate-100">
           <Link to="/dashboard" className="flex items-center gap-2 transition-opacity hover:opacity-90">
             <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600 shadow-sm">
@@ -261,7 +325,7 @@ export default function Dashboard() {
       <main className="flex-1 flex flex-col min-w-0">
         
         {/* Top Navbar (Shared) */}
-        <header className="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-end px-8">
+        <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-end px-8">
           <div className="flex items-center gap-4">
             <Link 
               to="/profile" 
@@ -285,7 +349,14 @@ export default function Dashboard() {
           {role === 'hr_admin' && <HrAdminView firstName={firstName} />}
           {role === 'mentor' && <MentorView firstName={firstName} />}
           {role === 'super_admin' && <SuperAdminView />}
-          {role === 'mentee' && <MenteeView firstName={firstName} />}
+          {role === 'mentee' && (
+            <MenteeView 
+              firstName={firstName} 
+              userId={user?.id || ''} 
+              token={(user as any)?.token || ''}
+              backendUrl="https://mentorship-backend-r9vb.onrender.com"
+            />
+          )}
         </div>
 
       </main>

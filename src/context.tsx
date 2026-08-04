@@ -1,5 +1,5 @@
 // context.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect,  useState, ReactNode } from 'react';
 import axios from 'axios';
 
 interface User {
@@ -32,6 +32,23 @@ export const ShopContextProvider: React.FC<{ children: ReactNode }> = ({ childre
    useEffect(() => {
     axios.get(`${backendUrl}/api/health`).catch(() => {});
   }, []);
+
+  useEffect(() => {
+  // warmup ping
+  axios.get(`${backendUrl}/api/health`).catch(() => {});
+
+  // re-hydrate user from token on refresh
+  const savedToken = localStorage.getItem('token');
+  if (savedToken && !user) {
+    const decoded = JSON.parse(atob(savedToken.split('.')[1]));
+    setUser({
+      id: decoded.id,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+    });
+  }
+}, []);
 
   const setToken = (t: string) => {
     localStorage.setItem('token', t);
