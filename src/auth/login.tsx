@@ -8,6 +8,17 @@ import axios from 'axios';
 import { useShopContext } from '../context';
 
 export default function Login() {
+
+     interface LoginResponse {
+      token: string;
+      user: {
+        id:string,
+        name?:string,
+        email:string,
+        role:string
+      }
+     }
+     
   const context = useShopContext();
   const backendUrl = context?.backendUrl || "";
   
@@ -16,16 +27,19 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    console.log("Button clicked, stopping refresh");
-
+    e.preventDefault();
     setIsLoading(true);
+    setError(""); // Clear previous error messages
     try {
 
       console.log(email);
       console.log(password);
-         const response = await axios.post<LoginResponse>(`${backendUrl}/api/login`, { email, password });
+         const response = await axios.post<LoginResponse>(`${backendUrl}/api/auth/login`, { 
+         email, password
+          });
+          if(response.status === 200){
+            navigate('/')
+          }
     } catch {
       setError("Invalid email or password.please try again")
     } finally {
