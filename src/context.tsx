@@ -1,5 +1,6 @@
 // context.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import axios from 'axios';
 
 interface User {
   id: string;
@@ -17,6 +18,7 @@ interface ShopContextType {
   logout: () => void;
 }
 
+
 export const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -26,6 +28,10 @@ export const ShopContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     () => localStorage.getItem('token') || ''
   );
   const [user, setUser] = useState<User | null>(null);
+
+   useEffect(() => {
+    axios.get(`${backendUrl}/api/health`).catch(() => {});
+  }, []);
 
   const setToken = (t: string) => {
     localStorage.setItem('token', t);

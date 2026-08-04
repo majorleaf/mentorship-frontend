@@ -22,7 +22,7 @@ export default function Register() {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      navigate('/dashboard');
+      navigate('/login');
     } catch (error) {
       setError('An error occurred during registration. Please try again.');
     } finally {

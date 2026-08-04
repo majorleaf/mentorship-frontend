@@ -17,7 +17,7 @@ import {
   Activity,
   ShieldAlert
 } from 'lucide-react';
-import { AuthContext } from '../../context/AuthContext';
+import { ShopContext } from '../context.tsx';
 
 // 1. MENTEE VIEW (Your original beautiful design)
 const MenteeView = ({ firstName }: { firstName: string }) => (
@@ -168,7 +168,7 @@ const SuperAdminView = () => (
 export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useContext(AuthContext) || {}; 
+  const { user, logout } = useContext(ShopContext) || {}; 
 
   // Safely extract user details
   const role = user?.role || 'mentee';
@@ -219,7 +219,7 @@ export default function Dashboard() {
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       
       {/* LEFT COLUMN: Sidebar (Shared across all roles) */}
-      <aside className="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col">
+      <aside className="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-slate-100">
           <Link to="/dashboard" className="flex items-center gap-2 transition-opacity hover:opacity-90">
             <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600 shadow-sm">
@@ -261,7 +261,7 @@ export default function Dashboard() {
       <main className="flex-1 flex flex-col min-w-0">
         
         {/* Top Navbar (Shared) */}
-        <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-end px-8">
+        <header className="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-end px-8">
           <div className="flex items-center gap-4">
             <Link 
               to="/profile" 
