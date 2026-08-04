@@ -4,19 +4,32 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Check } from 'lucide-react';
 import {useState } from 'react';
+import axios from 'axios';
+import { useShopContext } from '../context';
 
 export default function Login() {
+  const context = useShopContext();
+  const backendUrl = context?.backendUrl || "";
+  
   const [ email, setEmail ] = useState<string>("");
   const [password, setPassword ] = useState<string>("");
-  const [, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    console.log("Button clicked, stopping refresh");
+
+    setIsLoading(true);
     try {
+
       console.log(email);
       console.log(password);
-
-    } catch (error) {
-        setError("Invalid email or password.please try again")
+         const response = await axios.post<LoginResponse>(`${backendUrl}/api/login`, { email, password });
+    } catch {
+      setError("Invalid email or password.please try again")
+    } finally {
+      setIsLoading(false);
     }
   }
   return (
@@ -85,11 +98,11 @@ export default function Login() {
             {/* Submit Button */}
             <button 
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+              disabled={isLoading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
               <ArrowRight className="h-4 w-4" />
-              <Link to='Dashboard'></Link>
             </button>
           </form>
 
