@@ -1,14 +1,13 @@
 
-//LOGIN 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Check } from 'lucide-react';
 import {useState } from 'react';
 import axios from 'axios';
 import { useShopContext } from '../context';
 
 export default function Login() {
-
+    const navigate = useNavigate();
      interface LoginResponse {
       token: string;
       user: {
@@ -18,7 +17,7 @@ export default function Login() {
         role:string
       }
      }
-     
+
   const context = useShopContext();
   const backendUrl = context?.backendUrl || "";
   
