@@ -18,8 +18,7 @@ export default function Login() {
       }
      }
 
-  const context = useShopContext();
-  const backendUrl = context?.backendUrl || "";
+  const { backendUrl, setToken, setUser} = useShopContext();
   
   const [ email, setEmail ] = useState<string>("");
   const [password, setPassword ] = useState<string>("");
@@ -37,7 +36,9 @@ export default function Login() {
          email, password
           });
           if(response.status === 200){
-            navigate('/')
+            setToken(response.data.token);
+            setUser(response.data.user);
+            navigate('/dashboard')
           }
     } catch {
       setError("Invalid email or password.please try again")
